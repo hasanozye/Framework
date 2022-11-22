@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite" parallel="tests">
+
+    <test verbose="2" preserve-order="true" name="A">
+        <parameter name="url" value="https://google.com"/>
+        <classes>
+            <class name="utils.Test1"/>
+        </classes>
+    </test>
+
+    <test verbose="2" preserve-order="true" name="B">
+        <parameter name="url" value="https://yahoo.com"/>
+        <classes>
+            <class name="utils.Test1"/>
+        </classes>
+    </test>
+
+</suite>
