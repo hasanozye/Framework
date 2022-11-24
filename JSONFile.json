@@ -1,0 +1,27 @@
+{
+  "address": {
+    "state": "NY",
+    "city": "New York",
+    "streetAddress": "21 2nd Street",
+    "okul": "okul",
+    "postalCode": 10021
+  },
+  "adi": "John",
+  "soyadi": "Smith",
+  "memleket": "Ist",
+  "age": 25,
+  "phoneNumbers": [
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "fax",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "mobil",
+      "number": "211 555-1234"
+    }
+  ]
+}
