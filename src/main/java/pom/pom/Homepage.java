@@ -14,25 +14,30 @@ public class Homepage {
     String url = "http://opencart.abstracta.us/";
 
     @FindBy(xpath = "//input[@name='search']")
-    WebElement searchInput;
+    private WebElement searchInput;
 
     @FindBy(css = "#search button")
-    WebElement searchButton;
-
-
+    private WebElement searchButton;
 
 
     public Homepage(){
+        driver = Driver.getDriver();
         PageFactory.initElements(driver, this);
-        PageFactory.initElements(new AjaxElementLocatorFactory(driver, 10), this);
+        //PageFactory.initElements(new AjaxElementLocatorFactory(driver, 10), this);
     }
 
     public void gotoUrl(){
         driver.get(url);
     }
 
-    public void search(){
+    public SearchPage search(String text){
+        searchInput.sendKeys(text);
+        searchButton.click();
+        return new SearchPage();
+    }
 
+    public String getTitle(){
+        return driver.getTitle();
     }
 
 
