@@ -1,0 +1,207 @@
+-----------------------------------------------------------
+-----------------------------------------------------------
+ORACLE
+- JDBC Driver	oracle.jdbc.OracleDriver
+- JDBC URL	jdbc:oracle:thin:@localhost:1521:orclpdb1
+- Hibernate Dialect	org.hibernate.dialect.Oracle12cDialect
+
+OracleDataSource dataSource = new OracleDataSource();
+dataSource.setDatabaseName("high_performance_java_persistence");
+dataSource.setURL("jdbc:oracle:thin:@localhost:1521/orclpdb1");
+dataSource.setUser("oracle");
+dataSource.setPassword("admin");
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+MYSQL
+- JDBC Driver	com.mysql.jdbc.Driver
+- JDBC URL	jdbc:mysql://localhost/high_performance_java_persistence
+- Hibernate Dialect	org.hibernate.dialect.MySQL8Dialect
+
+MysqlDataSource dataSource = new MysqlDataSource();
+dataSource.setURL("jdbc:mysql://localhost/high_performance_java_persistence");
+dataSource.setUser("mysql");
+dataSource.setPassword("admin");
+
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+POSTGRESQL
+- JDBC Driver	org.postgresql.Driver
+- JDBC URL	jdbc:postgresql://localhost/high_performance_java_persistence
+- Hibernate Dialect	org.hibernate.dialect.PostgreSQL95Dialect
+
+PGSimpleDataSource dataSource = new PGSimpleDataSource();
+dataSource.setDatabaseName("high_performance_java_persistence");
+dataSource.setServerName("localhost");
+dataSource.setUser("postgres");
+dataSource.setPassword("admin");
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+SQL Server
+- JDBC Driver	com.microsoft.sqlserver.jdbc.SQLServerDriver
+- JDBC URL	jdbc:sqlserver://localhost;instance=SQLEXPRESS;databaseName=high_performance_java_persistence
+- Hibernate Dialect	org.hibernate.dialect.SQLServer2012Dialect
+
+SQLServerDataSource dataSource = new SQLServerDataSource();
+dataSource.setURL("jdbc:sqlserver://localhost;instance=SQLEXPRESS;" +"databaseName=high_performance_java_persistence;");
+dataSource.setUser("sa");
+dataSource.setPassword("adm1n");
+
+-----------------------------
+https://www.baeldung.com/java-jdbc-url-format
+
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+2. JDBC URL Formats for Oracle
+
+<dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc8</artifactId>
+    <version>21.1.0.0</version>
+</dependency>
+
+
+2.1. Connect to Oracle Database SID
+jdbc:oracle:thin:[<user>/<password>]@<host>[:<port>]:<SID>
+
+@Test
+public void givenOracleSID_thenCreateConnectionObject() {
+    String oracleJdbcUrl = "jdbc:oracle:thin:@myoracle.db.server:1521:my_sid";
+    String username = "dbUser";
+    String password = "1234567";
+    try (Connection conn = DriverManager.getConnection(oracleJdbcUrl, username, password)) {
+        assertNotNull(conn);
+    } catch (SQLException e) {
+        System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+    }
+}
+
+
+2.2. Connect to Oracle Database Service Name
+@Test
+public void givenOracleServiceName_thenCreateConnectionObject() {
+    String oracleJdbcUrl = "jdbc:oracle:thin:@//myoracle.db.server:1521/my_servicename";
+    ...
+    try (Connection conn = DriverManager.getConnection(oracleJdbcUrl, username, password)) {
+        assertNotNull(conn);
+        ...
+    }
+    ...
+}
+
+
+
+
+2.3. Connect to Oracle Database With tnsnames.ora Entries
+jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=<host>)(PORT=<port>))(CONNECT_DATA=(SERVICE_NAME=<service>)))
+
+@Test
+public void givenOracleTnsnames_thenCreateConnectionObject() {
+    String oracleJdbcUrl = "jdbc:oracle:thin:@" +
+      "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)" +
+      "(HOST=myoracle.db.server)(PORT=1521))" +
+      "(CONNECT_DATA=(SERVICE_NAME=my_servicename)))";
+    ...
+    try (Connection conn = DriverManager.getConnection(oracleJdbcUrl, username, password)) {
+        assertNotNull(conn);
+        ...
+    }
+    ...
+}
+
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+3. JDBC URL Formats for MySQL
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.22</version>
+</dependency>
+
+
+protocol//[hosts][/database][?properties]
+
+@Test
+public void givenMysqlDb_thenCreateConnectionObject() {
+    String jdbcUrl = "jdbc:mysql://mysql.db.server:3306/my_database?useSSL=false&serverTimezone=UTC";
+    String username = "dbUser";
+    String password = "1234567";
+    try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password)) {
+        assertNotNull(conn);
+    } catch (SQLException e) {
+        System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+    }
+}
+
+3.1. Protocol
+Load-balancing JDBC connections – jdbc:mysql:loadbalance:
+JDBC replication connections – jdbc:mysql:replication:
+
+
+3.2. Hosts
+jdbc:mysql://myhost1:3306,myhost2:3307/db_name
+jdbc:mysql://[myhost1:3306,myhost2:3307]/db_name
+jdbc:mysql:loadbalance://myhost1:3306,myhost2:3307/db_name?user=dbUser&password=1234567&loadBalanceConnectionGroup=group_name&ha.enableJMX=true
+
+
+3.3. Properties and User Credentials
+Valid global properties will be applied to all hosts. Properties are preceded by a question mark “?” and written as key=value pairs separated by the “&” symbol:
+
+jdbc:mysql://myhost1:3306/db_name?prop1=value1&prop2=value2
+We can put user credentials in the properties list as well:
+
+jdbc:mysql://myhost1:3306/db_name?user=root&password=mypass
+Also, we can prefix each host with the user credentials in the format “user:password@host“:
+
+jdbc:mysql://root:mypass@myhost1:3306/db_name
+Further, if our JDBC URL contains a list of hosts and all hosts use the same user credentials, we can prefix the host list:
+
+jdbc:mysql://root:mypass[myhost1:3306,myhost2:3307]/db_name
+
+
+
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+4. JDBC URL Format for Microsoft SQL Server
+<dependency>
+    <groupId>com.microsoft.sqlserver</groupId>
+    <artifactId>mssql-jdbc</artifactId>
+    <version>8.4.1.jre11</version>
+</dependency>
+
+
+jdbc:sqlserver://[serverName[\instanceName][:portNumber]][;property=value[;property=value]]
+
+@Test
+public void givenMssqlDb_thenCreateConnectionObject() {
+    String jdbcUrl = "jdbc:sqlserver://mssql.db.server\\mssql_instance;databaseName=my_database";
+    String username = "dbUser";
+    String password = "1234567";
+    try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password)) {
+        assertNotNull(conn);
+    } catch (SQLException e) {
+        System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+    }
+}
+
+
+
+5. JDBC URL Format for PostgreSQL
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.2.18</version>
+</dependency>
+
+
+jdbc:postgresql://host:port/database?properties
+
+
+6. MSAccess
+ String url="jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};
+                    DBQ=" + database + ";DriverID=22;READONLY=true";

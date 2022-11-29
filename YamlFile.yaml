@@ -1,0 +1,10 @@
+---
+author: "Ahmet"
+url: "https://google.com"
+testcases: a,c,d #all
+database:
+  driver: "mysql"
+  port: 3306
+  dbname: "deneme"
+  username: "user"
+  password: "pass"
